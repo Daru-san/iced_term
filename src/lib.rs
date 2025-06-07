@@ -15,3 +15,4 @@ pub use subscription::Subscription;
 pub use terminal::{Command, Event, Terminal};
 pub use theme::{ColorPalette, Theme};
 pub use view::TerminalView;
+pub use backend::BackendCommand;
