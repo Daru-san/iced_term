@@ -501,7 +501,7 @@ impl Widget<Event, Theme, iced::Renderer> for TerminalView<'_> {
                                         Point::new(x, y),
                                         Size {
                                             height: cell_size.height,
-                                            width: 1.0,
+                                            width: 0.1,
                                         },
                                     ),
                                     CursorShape::Block
