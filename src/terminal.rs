@@ -68,8 +68,8 @@ impl Terminal {
                     }),
                 );
             },
-            Command::ChangeTheme(color_pallete) => {
-                self.theme = Theme::new(ThemeSettings::new(color_pallete));
+            Command::ChangeTheme(color_palette) => {
+                self.theme = Theme::new(ThemeSettings::new(color_palette, None));
                 action = Action::Redraw;
                 self.sync_and_redraw();
             },

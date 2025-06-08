@@ -427,6 +427,7 @@ impl Widget<Event, Theme, iced::Renderer> for TerminalView<'_> {
             let font_scale_factor = self.term.font.scale_factor;
             let layout_offset_x = layout.position().x;
             let layout_offset_y = layout.position().y;
+            let bg_multiplier = self.term.theme.background_multiplier();
             let cursor_style = self.term.cursor_style;
 
             let geom =
@@ -440,7 +441,11 @@ impl Widget<Event, Theme, iced::Renderer> for TerminalView<'_> {
                                 * cell_height);
 
                         let mut fg = self.term.theme.get_color(indexed.fg);
-                        let mut bg = self.term.theme.get_color(indexed.bg);
+                        let mut bg = self
+                            .term
+                            .theme
+                            .get_color(indexed.bg)
+                            .scale_alpha(bg_multiplier);
 
                         // Handle dim, inverse, and selected text
                         if indexed.cell.flags.intersects(

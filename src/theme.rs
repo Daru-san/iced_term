@@ -78,6 +78,7 @@ impl Default for ColorPalette {
 pub struct Theme {
     palette: Box<ColorPalette>,
     ansi256_colors: HashMap<u8, Color>,
+    background_multiplier: f32,
 }
 
 impl Default for Theme {
@@ -85,16 +86,24 @@ impl Default for Theme {
         Self {
             palette: Box::<ColorPalette>::default(),
             ansi256_colors: build_ansi256_colors(),
+            background_multiplier: 1.0,
         }
     }
 }
 
 impl Theme {
-    pub fn new(settings: ThemeSettings) -> Self {
+    pub fn new(
+        settings: ThemeSettings,
+    ) -> Self {
         Self {
-            palette: settings.color_pallete,
+            palette: settings.color_palette,
             ansi256_colors: build_ansi256_colors(),
+            background_multiplier: settings.background_multiplier.unwrap_or(1.0),
         }
+    }
+
+    pub fn background_multiplier(&self) -> f32 {
+        self.background_multiplier
     }
 
     pub fn get_color(&self, c: ansi::Color) -> Color {
