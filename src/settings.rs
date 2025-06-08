@@ -1,4 +1,5 @@
 use crate::ColorPalette;
+use alacritty_terminal::vte::ansi::CursorStyle;
 use iced::Font;
 
 #[cfg(target_os = "windows")]
@@ -12,6 +13,7 @@ pub struct Settings {
     pub font: FontSettings,
     pub theme: ThemeSettings,
     pub backend: BackendSettings,
+    pub cursor_style: CursorStyle,
 }
 
 #[derive(Debug, Clone)]

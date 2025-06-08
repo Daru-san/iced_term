@@ -7,6 +7,7 @@ use crate::theme::TerminalStyle;
 use alacritty_terminal::index::Point as TerminalGridPoint;
 use alacritty_terminal::selection::SelectionType;
 use alacritty_terminal::term::{cell, TermMode};
+use alacritty_terminal::vte::ansi::CursorShape;
 use iced::alignment::{Horizontal, Vertical};
 use iced::mouse::{Cursor, ScrollDelta};
 use iced::widget::canvas::{Path, Text};
@@ -426,6 +427,7 @@ impl Widget<Event, Theme, iced::Renderer> for TerminalView<'_> {
             let font_scale_factor = self.term.font.scale_factor;
             let layout_offset_x = layout.position().x;
             let layout_offset_y = layout.position().y;
+            let cursor_style = self.term.cursor_style;
 
             let geom =
                 self.term.cache.draw(renderer, viewport.size(), |frame| {
@@ -491,7 +493,30 @@ impl Widget<Event, Theme, iced::Renderer> for TerminalView<'_> {
                             let cursor_color =
                                 self.term.theme.get_color(content.cursor.fg);
                             let cursor_rect =
-                                Path::rectangle(Point::new(x, y), cell_size);
+                                Path::new(|builder| match cursor_style.shape {
+                                    CursorShape::Beam => builder.rectangle(
+                                        Point::new(x, y),
+                                        Size {
+                                            height: cell_size.height,
+                                            width: 1.,
+                                        },
+                                    ),
+                                    CursorShape::Block
+                                    | CursorShape::HollowBlock => builder
+                                        .rectangle(Point::new(x, y), cell_size),
+                                    CursorShape::Underline => builder
+                                        .rectangle(
+                                            Point::new(x, y + cell_size.height),
+                                            Size {
+                                                width: cell_size.width,
+                                                height: 1.,
+                                            },
+                                        ),
+                                    CursorShape::Hidden => builder.rectangle(
+                                        Point::new(x, y),
+                                        Size::ZERO,
+                                    ),
+                                });
                             frame.fill(&cursor_rect, cursor_color);
                         }
 

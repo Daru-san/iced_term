@@ -5,6 +5,7 @@ use crate::font::TermFont;
 use crate::settings::{BackendSettings, FontSettings, Settings, ThemeSettings};
 use crate::theme::{ColorPalette, Theme};
 use crate::AlacrittyEvent;
+use alacritty_terminal::vte::ansi::CursorStyle;
 use iced::widget::canvas::Cache;
 use tokio::sync::mpsc::Sender;
 
@@ -29,6 +30,7 @@ pub struct Terminal {
     pub(crate) cache: Cache,
     pub(crate) bindings: BindingsLayout,
     pub(crate) backend: Option<Backend>,
+    pub(crate) cursor_style: CursorStyle,
     backend_settings: BackendSettings,
 }
 
@@ -42,6 +44,7 @@ impl Terminal {
             cache: Cache::default(),
             backend_settings: settings.backend,
             backend: None,
+            cursor_style: settings.cursor_style
         }
     }
 
