@@ -12,7 +12,7 @@ use iced::alignment::{Horizontal, Vertical};
 use iced::mouse::{Cursor, ScrollDelta};
 use iced::widget::canvas::{Path, Text};
 use iced::widget::container;
-use iced::{Element, Length, Point, Rectangle, Size, Theme};
+use iced::{Color, Element, Length, Point, Rectangle, Size, Theme};
 use iced_core::clipboard::Kind as ClipboardKind;
 use iced_core::keyboard::{Key, Modifiers};
 use iced_core::mouse::{self, Click};
@@ -441,11 +441,9 @@ impl Widget<Event, Theme, iced::Renderer> for TerminalView<'_> {
                                 * cell_height);
 
                         let mut fg = self.term.theme.get_color(indexed.fg);
-                        let mut bg = self
-                            .term
-                            .theme
-                            .get_color(indexed.bg)
-                            .scale_alpha(bg_multiplier);
+                        let mut bg = self.term.theme.get_color(indexed.bg);
+                        let bg_alpha = bg.a * bg_multiplier;
+                        let mut bg = Color::new(bg.r, bg.g, bg.b, bg_alpha_mul);
 
                         // Handle dim, inverse, and selected text
                         if indexed.cell.flags.intersects(
@@ -503,7 +501,7 @@ impl Widget<Event, Theme, iced::Renderer> for TerminalView<'_> {
                                         Point::new(x, y),
                                         Size {
                                             height: cell_size.height,
-                                            width: 1.,
+                                            width: 1.0,
                                         },
                                     ),
                                     CursorShape::Block
