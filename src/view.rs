@@ -443,7 +443,7 @@ impl Widget<Event, Theme, iced::Renderer> for TerminalView<'_> {
                         let mut fg = self.term.theme.get_color(indexed.fg);
                         let mut bg = self.term.theme.get_color(indexed.bg);
                         let bg_alpha = bg.a * bg_multiplier;
-                        let mut bg = Color::new(bg.r, bg.g, bg.b, bg_alpha_mul);
+                        let mut bg = Color::new(bg.r, bg.g, bg.b, bg_alpha);
 
                         // Handle dim, inverse, and selected text
                         if indexed.cell.flags.intersects(
