@@ -235,6 +235,7 @@ impl TerminalStyle for Theme {
         container::Style {
             background: Some(
                 hex_to_color(&self.palette.background)
+                .map(|color|{color.scale_alpha(self.background_multiplier)})
                     .unwrap_or_else(|_| {
                         panic!(
                             "invalid background color {}",
