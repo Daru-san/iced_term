@@ -12,7 +12,7 @@ use iced::alignment::{Horizontal, Vertical};
 use iced::mouse::{Cursor, ScrollDelta};
 use iced::widget::canvas::{Path, Text};
 use iced::widget::container;
-use iced::{Color, Element, Length, Point, Rectangle, Size, Theme};
+use iced::{Element, Length, Point, Rectangle, Size, Theme};
 use iced_core::clipboard::Kind as ClipboardKind;
 use iced_core::keyboard::{Key, Modifiers};
 use iced_core::mouse::{self, Click};
