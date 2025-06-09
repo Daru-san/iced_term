@@ -495,43 +495,69 @@ impl Widget<Event, Theme, iced::Renderer> for TerminalView<'_> {
                         if content.grid.cursor.point == indexed.point {
                             let cursor_color =
                                 self.term.theme.get_color(content.cursor.fg);
-                            let cursor_rect =
-                                Path::new(|builder| match cursor_style.shape {
-                                    CursorShape::Beam => builder.rectangle(
-                                        Point::new(x, y),
-                                        Size {
-                                            height: cell_size.height,
-                                            width: 0.1,
-                                        },
-                                    ),
+
+                            if content
+                                .terminal_mode
+                                .contains(TermMode::SHOW_CURSOR)
+                            {
+                                let cursor_style = if content
+                                    .terminal_mode
+                                    .contains(TermMode::APP_CURSOR)
+                                    && content
+                                        .terminal_mode
+                                        .contains(TermMode::ALT_SCREEN)
+                                {
+                                    CursorStyle {
+                                        shape: CursorShape::Block,
+                                        blinking: false,
+                                    }
+                                } else {
+                                    CursorStyle {
+                                        shape: CursorShape::Beam,
+                                        blinking: false,
+                                    }
+                                };
+
+                                match cursor_style.shape {
                                     CursorShape::Block
-                                    | CursorShape::HollowBlock => builder
-                                        .rectangle(Point::new(x, y), cell_size),
-                                    CursorShape::Underline => builder
-                                        .rectangle(
+                                    | CursorShape::HollowBlock => frame.fill(
+                                        &Path::rectangle(
+                                            Point::new(x, y),
+                                            cell_size,
+                                        ),
+                                        cursor_color.scale_alpha(0.4),
+                                    ),
+                                    CursorShape::Beam => {
+                                        let rect = Path::rectangle(
+                                            Point::new(x, y),
+                                            Size {
+                                                width: 1.0,
+                                                height: cell_size.height,
+                                            },
+                                        );
+                                        frame.fill(&rect, cursor_color);
+                                    },
+                                    CursorShape::Underline => {
+                                        let rect = Path::rectangle(
                                             Point::new(x, y + cell_size.height),
                                             Size {
                                                 width: cell_size.width,
-                                                height: 1.,
+                                                height: 1.0,
                                             },
-                                        ),
-                                    CursorShape::Hidden => builder.rectangle(
-                                        Point::new(x, y),
-                                        Size::ZERO,
-                                    ),
-                                });
-                            frame.fill(&cursor_rect, cursor_color);
+                                        );
+                                        frame.stroke(
+                                            &rect,
+                                            Stroke::default()
+                                                .with_color(cursor_color),
+                                        );
+                                    },
+                                    CursorShape::Hidden => {},
+                                }
+                            }
                         }
 
                         // Draw text
                         if indexed.c != ' ' && indexed.c != '\t' {
-                            if content.grid.cursor.point == indexed.point
-                                && content
-                                    .terminal_mode
-                                    .contains(TermMode::APP_CURSOR)
-                            {
-                                fg = bg;
-                            }
                             let text = Text {
                                 content: indexed.c.to_string(),
                                 position: Point::new(
