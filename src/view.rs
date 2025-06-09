@@ -508,10 +508,7 @@ impl Widget<Event, Theme, iced::Renderer> for TerminalView<'_> {
                                         blinking: false,
                                     }
                                 } else {
-                                    CursorStyle {
-                                        shape: CursorShape::Beam,
-                                        blinking: false,
-                                    }
+                                    self.term.cursor_style
                                 };
 
                                 match cursor_style.shape {
