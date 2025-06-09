@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use crate::ColorPalette;
 use alacritty_terminal::vte::ansi::CursorStyle;
 use iced::Font;
@@ -20,6 +22,7 @@ pub struct Settings {
 pub struct BackendSettings {
     pub program: String,
     pub args: Vec<String>,
+    pub working_directory: Option<PathBuf>
 }
 
 impl Default for BackendSettings {
@@ -27,6 +30,7 @@ impl Default for BackendSettings {
         Self {
             program: DEFAULT_SHELL.to_string(),
             args: vec![],
+            working_directory: None
         }
     }
 }
